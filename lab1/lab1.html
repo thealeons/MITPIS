@@ -25,15 +25,48 @@
                 страницы блокнота или часть ленты. Новое сообщение – новые символы ключа.
             </p>
         </div>
-        <div style="background-color:white; float:left; width:70%; height:590px; margin-left:1%; margin-top: 10px; border-radius: 10px;">
-            
+        <div id='mainContent' style="background-color:white; float:left; width:70%; height:590px; margin-left:1%; margin-top: 10px; border-radius: 10px;">
+    
         </div>
         <div style="margin-top: 600px; text-align: center;">
             <br>
             <span style="color: gray;">&copy; Леонов Александр, группа № Z0410M, 2020 год</span>
         </div>
+
     </body>
     <footer>
-        
+        <script>
+            //========Фабричный метод, который создает элементы========
+            //На вход принемает: название элемента, расположение(x,y), стили, название классов
+            //На выход элемент
+            function elementsFactory(elementName, x, y, elementId, elementType){
+                return $("<"+elementName+">").css("margin-top",y).css("margin-left",x).attr('id',elementId).attr('type',elementType);
+            }
+
+            //=========================================================
+
+            //========Создание новых элементов=========================
+                var headText = elementsFactory('div','16%','1%').css('overflow','auto').append(
+                    elementsFactory('span').text('ВХОДНЫЕ ДАННЫЕ'),
+                    elementsFactory('span','45%','0%').text('РЕЗУЛЬТАТ')
+                )
+                var btnKey = elementsFactory('button','2%', '2%').text('Задать ключ').addClass('btn btn-secondary');
+                var inputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none');
+                var outputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none').attr('readonly','readonly');
+                var keyText = elementsFactory('span','20%','3%', 'keyText').text('Ключ не задан!').css('color','red')
+                var switchEncoder = elementsFactory('div', '24%','0%').addClass('btn-group btn-group-toggle').attr('data-toggle','buttons').append(
+                    '<label class="btn btn-outline-info active">'+
+                        '<input id="option1" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Шифратор'+
+                    '</label>'+
+                    '<label class="btn btn-outline-info">'+
+                        '<input id="option2" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Дешифратор'+
+                    '</label>'
+                );
+                var btnStart = elementsFactory('button','89%', '2%').text('Запуск').addClass('btn btn-primary').prop('disabled',true);
+            //=========================================================
+
+            
+            $('#mainContent').append(headText,inputData,outputData,btnKey,keyText,switchEncoder,btnStart);
+        </script>
     </footer>
 </html>
