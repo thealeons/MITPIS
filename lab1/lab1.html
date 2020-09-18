@@ -36,25 +36,25 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="createKeyLabel">Создание ключа</h5>
+                  <h5 class="modal-title" id="createKeyLabel">Добавление ключа</h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
                 <div class="modal-body">
-                    <textarea rows="7" style="resize: none; width: 100%;"></textarea>
-
+                    <textarea id = "key" rows="7" style="resize: none; width: 100%;"></textarea>
                 </div>
                 <div class="modal-footer" id="createKey-modal-footer">
                 </div>
               </div>
             </div>
-          </div>
+        </div>
     </body>
     <footer>
         <script>
+            var keyForLR='';
             //========Фабричный метод, который создает элементы========
-            //На вход принемает: название элемента, расположение(x,y), стили, название классов
+            //На вход принемает: название элемента, расположение(x,y), id, тип элемента
             //На выход элемент
             function elementsFactory(elementName, x, y, elementId, elementType){
                 return $("<"+elementName+">").css("margin-top",y).css("margin-left",x).attr('id',elementId).attr('type',elementType);
@@ -67,11 +67,11 @@
                     elementsFactory('span').text('ВХОДНЫЕ ДАННЫЕ'),
                     elementsFactory('span','45%','0%').text('РЕЗУЛЬТАТ')
                 )
-                var btnKey = elementsFactory('button','2%', '2%', 'btnKey','button').text('Создать ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
+                var btnKey = elementsFactory('button','2%', '2%', 'btnKey','button').text('Добавить ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
                 var inputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none');
-                var outputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none').attr('readonly','readonly');
-                var keyText = elementsFactory('span','18%','3%', 'keyText').text('Ключ не создан!').css('color','red')
-                var switchEncoder = elementsFactory('div', '24%','0%').addClass('btn-group btn-group-toggle').attr('data-toggle','buttons').append(
+                var outputData = elementsFactory('textarea', '2%', '1%', 'outputData').css('width','47%').css('height','70%').css('resize','none').attr('readonly','readonly');
+                var keyText = elementsFactory('span','18%','3%', 'keyText').text('Ключ не создан!').css('color','red');
+                var switchEncoder = elementsFactory('div', '23%','0%').addClass('btn-group btn-group-toggle').attr('data-toggle','buttons').append(
                     '<label class="btn btn-outline-info active">'+
                         '<input id="option1" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Шифратор'+
                     '</label>'+
@@ -79,15 +79,48 @@
                         '<input id="option2" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Дешифратор'+
                     '</label>'
                 );
-                var btnStart = elementsFactory('button','89%', '2%').text('Запуск').addClass('btn btn-primary').prop('disabled',true);
+                var btnStart = elementsFactory('button','20%', '0%', 'start').text('Запуск').addClass('btn btn-primary').prop('disabled',true);
+                var divStart = elementsFactory('div','80%', '1%').append(
+                    elementsFactory('a','0%', '0%','reset').attr('href','javascript:location.reload()').css('visibility', 'hidden').text('Сброс'),
+                    btnStart
+                );
                 var generateKey = elementsFactory('button').addClass('btn btn-secondary').text('Сгенерировать');
                 var saveKey = elementsFactory('button').addClass('btn btn-primary').text('Сохранить');
 
             //=========================================================
 
+            //========Действие для элементов==========================
+                generateKey.on('click', function() {
+                    $('#key').val(generatorKey());
+                });
+
+                saveKey.on('click', function() {
+                    $('#createKey').modal('hide');
+                    $('#keyText').css('visibility', 'hidden');
+                    $('#start').prop('disabled',false);
+                    $('#reset').css('visibility', 'visible');
+                });
+
+                btnStart.on('click', function() {
+                    $('#outputData').val('Здесь будет результат по ключу: '+$('#key').val())
+                });
+            //========================================================
             
-            $('#mainContent').append(headText,inputData,outputData,btnKey,keyText,switchEncoder,btnStart);
-            $('#createKey-modal-footer').append(generateKey, saveKey);
+            //===========Добавление элементов==========================
+                $('#mainContent').append(headText,inputData,outputData,btnKey,keyText,switchEncoder,divStart);
+                $('#createKey-modal-footer').append(generateKey, saveKey);
+            //=========================================================
+
+
+            //=====Основной функционал шифратора/дешифратора==========
+
+                //Гениратор рандомного ключа
+                function generatorKey(){
+                    var key = 'Клюююч';
+                    return key
+                }
+                //
+            //========================================================
         </script>
     </footer>
 </html>
