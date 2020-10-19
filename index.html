@@ -68,31 +68,49 @@
                     elementsFactory('span').text('ВХОДНЫЕ ДАННЫЕ'),
                     elementsFactory('span','45%','0%').text('РЕЗУЛЬТАТ')
                 )
-                var btnKey = elementsFactory('button','2%', '2%', 'btnKey','button').text('Добавить ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
-                var inputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none');
+                var btnKey = elementsFactory('button','2%', '2%', 'btnKey','button').prop('disabled',true).text('Добавить ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
+                var inputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none').attr('placeholder','Введите текст, а затем установите ключ');
                 var outputData = elementsFactory('textarea', '2%', '1%', 'outputData').css('width','47%').css('height','70%').css('resize','none').attr('readonly','readonly');
                 var keyText = elementsFactory('span','18%','3%', 'keyText').text('Ключ не создан!').css('color','red');
-                var switchEncoder = elementsFactory('div', '23%','0%').addClass('btn-group btn-group-toggle').attr('data-toggle','buttons').append(
+                var switchEncoder = elementsFactory('div', '23%','0%').addClass('btn-group btn-group-toggle').attr('id','data-toggle').attr('data-toggle','buttons').append(
                     '<label class="btn btn-outline-info active">'+
                         '<input id="option1" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Шифратор'+
                     '</label>'+
-                    '<label class="btn btn-outline-info">'+
+                    '<label class="btn btn-outline-info" onclick="setСiphertext()">'+
                         '<input id="option2" type="radio" class="btn btn-outline-info" style="margin-top: 0px; margin-left: 0px;">Дешифратор'+
                     '</label>'
-                );
+                ).prop('disabled',true);
                 var btnStart = elementsFactory('button','20%', '0%', 'start').text('Запуск').addClass('btn btn-primary').prop('disabled',true);
                 var divStart = elementsFactory('div','80%', '1%').append(
                     elementsFactory('a','0%', '0%','reset').attr('href','javascript:location.reload()').css('visibility', 'hidden').text('Сброс'),
                     btnStart
                 );
                 var generateKey = elementsFactory('button').addClass('btn btn-secondary').text('Сгенерировать');
-                var saveKey = elementsFactory('button').addClass('btn btn-primary').text('Сохранить');
+                var saveKey = elementsFactory('button').addClass('btn btn-primary').text('Сохранить').prop('disabled',true);
 
             //=========================================================
 
             //========Действие для элементов==========================
                 generateKey.on('click', function() {
-                    $('#key').val(generatorKey());
+                    $('#key').val(generatorKey(Number.parseInt(inputData.val().length)));
+                    saveKey.prop('disabled',false);
+                });
+                inputData.on('keyup', function(){
+                    if($(this).val()!=""){
+                        $('#btnKey').prop('disabled',false);
+                    }
+                    else{
+                        $('#btnKey').prop('disabled',true);
+                    }
+                });
+
+                $('#key').on('keyup', function(){
+                    if($(this).val()!=""){
+                        saveKey.prop('disabled',false);
+                    }
+                    else{
+                        saveKey.prop('disabled',true);
+                    }
                 });
 
                 saveKey.on('click', function() {
@@ -100,11 +118,18 @@
                     $('#keyText').css('visibility', 'hidden');
                     $('#start').prop('disabled',false);
                     $('#reset').css('visibility', 'visible');
+                    switchEncoder.prop('disabled',false);
+                    key = $('#key').val();
                 });
 
                 btnStart.on('click', function() {
-                    test()
-                    $('#outputData').val('Здесь будет результат по ключу: '+$('#key').val())
+                    if($($("#data-toggle label")[0]).hasClass("active")){
+                        startCoding(inputData.val());
+                    }
+                    else{
+                        startDecoding(inputData.val())
+                    }
+                    
                 });
             //========================================================
             
@@ -113,16 +138,12 @@
                 $('#createKey-modal-footer').append(generateKey, saveKey);
             //=========================================================
 
-
-            //=====Основной функционал шифратора/дешифратора==========
-
-                //Гениратор рандомного ключа
-                function generatorKey(){
-                    var key = 'Клюююч';
-                    return key
-                }
-                //
-            //========================================================
+            //====Устанавливает зашифрованный текст на вход
+            function setСiphertext(){
+                inputData.val(outputData.val());
+                outputData.val("");
+            }
+            //==========
         </script>
     </footer>
 </html>
