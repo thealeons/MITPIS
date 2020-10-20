@@ -13,7 +13,7 @@
         <div class="p-3 mb-2 bg-primary text-center text-white">
             <h6>РАЗРАБОТКА ПРИЛОЖЕНИЯ ДЛЯ КРИПТОГРАФИЧЕСКОЙ ЗАЩИТЫ ИНФОРМАЦИИ. ШИФР ВЕРНАМА (ОДНОРАЗОВЫЙ БЛОКНОТ)</h6>
         </div>
-        <div style="background-color:white; float:left; width:25%; height:590px; margin-left:2%; margin-top: 10px; overflow: scroll;">
+        <div style="background-color:white; float:left; width:25%; height:700px; margin-left:2%; margin-top: 10px; overflow: scroll;">
             <p style="text-indent: 30px">Идеальный способ шифрования существует. 
                 Он называется одноразовым блокнотом и был изобретен в 1917 году Мэйджором Джозефом Моборном (Major Joseph Mauborgne) 
                 и Гилбертом Вернамом (Gilbert Vernam) из AT&T. В классическом понимании одноразовый блокнот является большой неповторяю­щейся 
@@ -26,10 +26,10 @@
                 страницы блокнота или часть ленты. Новое сообщение – новые символы ключа.
             </p>
         </div>
-        <div id='mainContent' style="background-color:white; float:left; width:70%; height:590px; margin-left:1%; margin-top: 10px; border-radius: 10px;">
+        <div id='mainContent' style="background-color:white; float:left; width:70%; height:700px; margin-left:1%; margin-top: 10px; border-radius: 10px;">
     
         </div>
-        <div style="margin-top: 600px; text-align: center;">
+        <div style="margin-top: 700px; text-align: center;">
             <br>
             <span style="color: gray;">&copy; Леонов Александр, группа № Z0410M, 2020 год</span>
         </div>
@@ -68,7 +68,11 @@
                     elementsFactory('span').text('ВХОДНЫЕ ДАННЫЕ'),
                     elementsFactory('span','45%','0%').text('РЕЗУЛЬТАТ')
                 )
-                var btnKey = elementsFactory('button','2%', '2%', 'btnKey','button').prop('disabled',true).text('Добавить ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
+                var inputLoadFile = elementsFactory('input', '23%', 0, 'loadFile', 'file').addClass('form-file-input').attr('id','loadFile').attr('accept','.txt')
+                var loadFile = elementsFactory('div').addClass('form-file').append(
+                    inputLoadFile
+                )
+                var btnKey = elementsFactory('button','2%', '4%', 'btnKey','button').prop('disabled',true).text('Добавить ключ').addClass('btn btn-secondary').attr('data-toggle','modal').attr('data-target','#createKey');
                 var inputData = elementsFactory('textarea', '2%', '1%').css('width','47%').css('height','70%').css('resize','none').attr('placeholder','Введите текст, а затем установите ключ');
                 var outputData = elementsFactory('textarea', '2%', '1%', 'outputData').css('width','47%').css('height','70%').css('resize','none').attr('readonly','readonly');
                 var keyText = elementsFactory('span','18%','3%', 'keyText').text('Ключ не создан!').css('color','red');
@@ -81,7 +85,7 @@
                     '</label>'
                 ).prop('disabled',true);
                 var btnStart = elementsFactory('button','20%', '0%', 'start').text('Запуск').addClass('btn btn-primary').prop('disabled',true);
-                var divStart = elementsFactory('div','80%', '1%').append(
+                var divStart = elementsFactory('div','80%').append(
                     elementsFactory('a','0%', '0%','reset').attr('href','javascript:location.reload()').css('visibility', 'hidden').text('Сброс'),
                     btnStart
                 );
@@ -103,6 +107,7 @@
                         $('#btnKey').prop('disabled',true);
                     }
                 });
+
 
                 $('#key').on('keyup', function(){
                     if($(this).val()!=""){
@@ -131,10 +136,27 @@
                     }
                     
                 });
+                var kkk
+
+                inputLoadFile.on('change', function() {
+                    let file = $(this).get(0).files[0];
+                    let reader = new FileReader();
+                    reader.readAsText(file);
+                    reader.onload = function() {
+                        inputData.val(reader.result);
+                        if(inputData.val()!=""){
+                            $('#btnKey').prop('disabled',false);
+                        }
+                    };
+                    reader.onerror = function() {
+                        inputData.val("Ошибка при чтении файла! Введите текст или оставьте этот");
+                        $('#btnKey').prop('disabled',false);
+                    };
+                });
             //========================================================
             
             //===========Добавление элементов==========================
-                $('#mainContent').append(headText,inputData,outputData,btnKey,keyText,switchEncoder,divStart);
+                $('#mainContent').append(headText,inputData,outputData,loadFile,btnKey,keyText,switchEncoder,divStart);
                 $('#createKey-modal-footer').append(generateKey, saveKey);
             //=========================================================
 
