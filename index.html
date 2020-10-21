@@ -91,6 +91,7 @@
                 );
                 var generateKey = elementsFactory('button').addClass('btn btn-secondary').text('Сгенерировать');
                 var saveKey = elementsFactory('button').addClass('btn btn-primary').text('Сохранить').prop('disabled',true);
+                var saveResultBtn = elementsFactory('button','90%', '2%').text('Сохранить').attr('download','result.txt').hide();
 
             //=========================================================
 
@@ -130,13 +131,13 @@
                 btnStart.on('click', function() {
                     if($($("#data-toggle label")[0]).hasClass("active")){
                         startCoding(inputData.val());
+                        saveResultBtn.show()
                     }
                     else{
                         startDecoding(inputData.val())
                     }
                     
                 });
-                var kkk
 
                 inputLoadFile.on('change', function() {
                     let file = $(this).get(0).files[0];
@@ -153,10 +154,18 @@
                         $('#btnKey').prop('disabled',false);
                     };
                 });
+
+                saveResultBtn.on('click', function() {
+                    outputData.val()
+	                var type = 'data:application/octet-stream;base64, ';
+                    var base = btoa(outputData.val());
+                    var res = type + base;
+                    window.location.href=res
+                });
             //========================================================
             
             //===========Добавление элементов==========================
-                $('#mainContent').append(headText,inputData,outputData,loadFile,btnKey,keyText,switchEncoder,divStart);
+                $('#mainContent').append(headText,inputData,outputData,loadFile,btnKey,keyText,switchEncoder,divStart, saveResultBtn);
                 $('#createKey-modal-footer').append(generateKey, saveKey);
             //=========================================================
 
